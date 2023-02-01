@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     float target = 500.0f;
     Vector2 ref_velocity = Vector2.zero;
 
-     float moveSpeed_horizontal = 3000f;
+     float moveSpeed_horizontal = 1000f;
      bool is_jumping = false;
     bool can_jump = false;
     float jumpForce = 10f;
@@ -58,13 +58,33 @@ public class Player : MonoBehaviour
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             can_jump = false;
         }
+        
+
+        if (horizontal_value > 0.5 || horizontal_value < -0.5)
+        {
+            timePassed += Time.fixedDeltaTime;
+            if (timePassed > 0.1)
+            {
+                moveSpeed_horizontal = 700f;
+                
+            }
+            else
+            {
+                moveSpeed_horizontal = 1000f;
+            }
+
+        }
+        else
+        {
+            timePassed = 0;
+        }
 
 
-        timePassed += Time.fixedDeltaTime;
-        targetSpeed = startSpeed * Mathf.Pow(0.01f, timePassed);
+        
         Debug.Log(targetSpeed);
         Vector2 target_velocity = new Vector2(horizontal_value * moveSpeed_horizontal * Time.fixedDeltaTime, rb.velocity.y);
         rb.velocity = Vector2.SmoothDamp(rb.velocity, target_velocity, ref ref_velocity, 0.05f);
+        
      
 
         //Debug.Log(rb.velocity);
