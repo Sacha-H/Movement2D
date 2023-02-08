@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     bool cansmalldash = false;
 
     float jumpForce = 17f;
-    [Range(0, 1)] [SerializeField] float smooth_time = 0.05f;
+    float smooth_time = 0.35f;
 
 
     float targetSpeed;
@@ -126,20 +126,32 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        // Garantit que nous ne pouvons pas appeler Jump plusieurs fois à partir d'une seule pression
-        //LastPressedJumpTime = 0;
-        //LastOnGroundTime = 0;
+        // le compteur de saut
        CountJump -= 1;
 
-        // On augmente la force appliquée si on tombe
-        // Cela signifie que nous aurons toujours l'impression de sauter le même montant
+        
+
+
 
         
+      
+
+        // premier saut
+        
+
+        //second 
+        if (CountJump == 0 || IsGrounded == false)
+        {
             rb.velocity = Vector2.zero;
-            
+            rb.AddForce(Vector2.up * jumpForce * 0.8f, ForceMode2D.Impulse);
+            CountJump = 0;
 
+        }
 
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        if (CountJump == 1)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
         can_jump = false;
         downJumping = false;
 
