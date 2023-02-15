@@ -29,7 +29,13 @@ public class Player : MonoBehaviour
  
     [SerializeField] bool can_jump = false;
     bool downJumping = false;
-    
+
+
+    // FLY
+    bool canfly = false;
+    bool stopfly = false;
+    float timeFly = 0;
+
 
 
 
@@ -52,12 +58,13 @@ public class Player : MonoBehaviour
     void Update()
     {
         horizontal_value = Input.GetAxis("Horizontal");
+        vertical_value = Input.GetAxis("Vertical");
 
         //animController.SetFloat("speed", Mathf.Abs(horizontal_value));
         //sr.flipX = horizontal_value < 0;
         //animController.SetFloat("fall", rb.velocity.y);
 
- 
+
 
         if (Input.GetButtonDown("Jump") && CountJump > 0)
         {
@@ -70,10 +77,44 @@ public class Player : MonoBehaviour
 
             downJumping = true;
         }
+
+        if (Input.GetButtonDown("Fly") && IsGrounded == false)
+        { 
+            canfly = true;
+        }
+        if (Input.GetButtonUp("Fly"))
+        {
+
+            stopfly = true;
+        }
     }
     void FixedUpdate()
     {
 
+
+
+        if (canfly == true)
+        {
+            Debug.Log("fonctionne");
+          
+            rb.velocity = new Vector2(horizontal_value * moveSpeed_horizontal * Time.fixedDeltaTime, vertical_value * moveSpeed_horizontal * Time.fixedDeltaTime);
+            
+            timeFly += Time.fixedDeltaTime;
+
+            if (timeFly >2)
+            {
+                stopfly = true;
+            }
+
+        }
+   
+        if (stopfly == true)
+        {
+            canfly = false;
+            timeFly = 0;
+
+
+        }
 
 
 
@@ -101,7 +142,7 @@ public class Player : MonoBehaviour
             
         }
 
-        if (downJumping || rb.velocity.y < 0 )
+        if (downJumping || rb.velocity.y < 0 && canfly == false)
         {
             falling();
         }
@@ -128,16 +169,17 @@ public class Player : MonoBehaviour
     {
         // le compteur de saut
        CountJump -= 1;
-
-        
-
+        stopfly = false;
 
 
-        
-      
+
+
+
+
+
 
         // premier saut
-        
+
 
         //second 
         if (CountJump == 0 || IsGrounded == false)
@@ -222,6 +264,7 @@ public class Player : MonoBehaviour
         IsGrounded = true;
         downJumping = false;
         CountJump = 2; //reset double saut quand on touche le sol
+       
 
 
     }
