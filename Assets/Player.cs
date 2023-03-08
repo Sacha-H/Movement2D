@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     bool canfly = false;
     bool stopfly = false;
     float timeFly = 0;
+     float flySpeed = 0.5f;
 
 
 
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         //animController = GetComponent<Animator>();
-        Debug.Log(Mathf.Lerp(current, target, 0));
+        //Debug.Log(Mathf.Lerp(current, target, 0));
     }
 
     // Update is called once per frame
@@ -81,40 +82,23 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Fly") && IsGrounded == false)
         { 
             canfly = true;
+            Debug.Log("vol");
+
         }
         if (Input.GetButtonUp("Fly"))
         {
 
             stopfly = true;
+            Debug.Log("pas vol");
         }
     }
     void FixedUpdate()
     {
 
 
-
-        if (canfly == true)
-        {
-            Debug.Log("fonctionne");
-          
-            rb.velocity = new Vector2(horizontal_value * moveSpeed_horizontal * Time.fixedDeltaTime, vertical_value * moveSpeed_horizontal * Time.fixedDeltaTime);
-            
-            timeFly += Time.fixedDeltaTime;
-
-            if (timeFly >2)
-            {
-                stopfly = true;
-            }
-
-        }
-   
-        if (stopfly == true)
-        {
-            canfly = false;
-            timeFly = 0;
+        // FLY
 
 
-        }
 
 
 
@@ -122,7 +106,8 @@ public class Player : MonoBehaviour
         if (IsGrounded == true)
         {
             smallDash();
-        }else
+        }
+        else
         {
             moveSpeed_horizontal = 700f;
         }
@@ -136,10 +121,10 @@ public class Player : MonoBehaviour
 
         if (can_jump)
         {
-            
+
             Jump();
-           
-            
+
+
         }
 
         if (downJumping || rb.velocity.y < 0 && canfly == false)
@@ -152,7 +137,7 @@ public class Player : MonoBehaviour
 
 
 
-        Debug.Log(targetSpeed);
+        //Debug.Log(targetSpeed);
         Vector2 target_velocity = new Vector2(horizontal_value * moveSpeed_horizontal * Time.fixedDeltaTime, rb.velocity.y);
         rb.velocity = Vector2.SmoothDamp(rb.velocity, target_velocity, ref ref_velocity, 0.05f);
         rb.velocity = Vector2.ClampMagnitude(rb.velocity, 35);
@@ -160,8 +145,91 @@ public class Player : MonoBehaviour
 
 
         //Debug.Log(rb.velocity);
-        Debug.Log(target_velocity);
+        //Debug.Log(target_velocity);
+
+        if (canfly == true)
+        {
+
+            //if (vertical_value < 0)
+            //{
+            //    if (horizontal_value > 0.1)
+            //    {
+            //        horizontal_value = 1;
+            //    Debug.Log("vrai");
+            //    }
+            //    if (horizontal_value < 0.1)
+            //    {
+            //        horizontal_value = -1;
+            //    Debug.Log("vrai");
+
+            //    }
+            rb.gravityScale = 1; 
+
+                Vector2 target_fly = new Vector2(horizontal_value * Time.fixedDeltaTime, 2 * Time.fixedDeltaTime);
+                rb.velocity = Vector2.SmoothDamp(rb.velocity, target_fly, ref ref_velocity, 0.05f);
+                rb.AddForce(rb.velocity * flySpeed, ForceMode2D.Impulse);
+                rb.velocity = Vector2.ClampMagnitude(rb.velocity, 20);
+
+
+
+
+
+
+
+
+            Debug.Log(horizontal_value);
+            Debug.Log(vertical_value);
+
+            if (timeFly > 2)
+            {
+                stopfly = true;
+            }
+
+        }
+        if (stopfly == true)
+        {
+            canfly = false;
+            timeFly = 0;
+            rb.gravityScale = 3;
+
+
+        }
     }
+
+    
+
+
+
+
+    //    if (canfly == true)
+    //    {
+    //        Debug.Log("fonctionne");
+
+    //        rb.velocity = new Vector2(horizontal_value * moveSpeed_horizontal * Time.fixedDeltaTime, vertical_value * moveSpeed_horizontal * Time.fixedDeltaTime);
+
+    //        timeFly += Time.fixedDeltaTime;
+
+    //        if (timeFly > 2)
+    //        {
+    //            stopfly = true;
+    //        }
+
+    //    }
+
+    //    if (stopfly == true)
+    //    {
+    //        canfly = false;
+    //        timeFly = 0;
+
+
+    //    }
+    //}
+
+    //void Fly()
+    //{
+
+        
+    //}
 
 
 
