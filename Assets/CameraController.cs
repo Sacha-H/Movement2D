@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
 
-        if (rb.velocity.x > 3f)
+/*        if (rb.velocity.x > 3f)
         {
             offsetB = 4;
         }
@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
             offsetB = -7;
         }
 
-        Debug.Log(rb.velocity.x);
+        Debug.Log(rb.velocity.x);*/
 
 
 
